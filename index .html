@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Enterprise AI Attack Surface: Three Real Vulnerabilities in Workplace Deployments</title>
+<meta name="description" content="A clear guide to indirect prompt injection, software supply chain package hallucination, and autonomous agent security risks across enterprise environments.">
+<link rel="canonical" href="https://spectrumzestwings.ae/blog/cybersecurity-enterprise-ai-attack-surface">
+<meta property="og:title" content="The Enterprise AI Attack Surface: Three Real Vulnerabilities in Workplace Deployments">
+<meta property="og:description" content="A clear guide to indirect prompt injection, software supply chain package hallucination, and autonomous agent security risks across enterprise environments.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1400&q=80&auto=format&fit=crop">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Enterprise AI Attack Surface: Three Real Vulnerabilities in Workplace Deployments">
+<meta name="twitter:description" content="A clear guide to indirect prompt injection, software supply chain package hallucination, and autonomous agent security risks across enterprise environments.">
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1400&q=80&auto=format&fit=crop">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f2e36'/><circle cx='50' cy='50' r='24' fill='%23b3261e'/><circle cx='50' cy='50' r='12' fill='%23f4f2ec'/></svg>">
+
+<!-- Typography: Newsreader (Editorial Serif) & Hanken Grotesk (Humanist Sans) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+
+<!-- Structured Data: TechArticle Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "The Enterprise AI Attack Surface: Three Real Vulnerabilities in Workplace Deployments",
+  "description": "A clear guide to indirect prompt injection, software supply chain package hallucination, and autonomous agent security risks across enterprise environments.",
+  "image": "https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1400&q=80&auto=format&fit=crop",
+  "datePublished": "2026-10-17T08:00:00+04:00",
+  "dateModified": "2026-10-19T16:30:00+04:00",
+  "author": {
+    "@type": "Organization",
+    "name": "Spectrum Zestwings Security Engineering Team",
+    "url": "https://spectrumzestwings.ae"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Spectrum Zestwings Engineering Blog",
+    "url": "https://spectrumzestwings.ae",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://spectrumzestwings.ae/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://spectrumzestwings.ae/blog/cybersecurity-enterprise-ai-attack-surface"
+  },
+  "keywords": [
+    "Enterprise AI Security",
+    "Indirect Prompt Injection",
+    "Package Hallucination",
+    "Autonomous Agent Security",
+    "AI Security Audit"
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --paper: #f7f6f2;
+    --paper-card: #ffffff;
+    --paper-subtle: #eae7df;
+    --ink: #16201f;
+    --muted: #56605e;
+    --rule: #d5d9d3;
+    --petrol: #0f2e36;
+    --petrol-dark: #0b2228;
+    --petrol-surface: #14373f;
+    --petrol-border: #28545e;
+    --red: #b3261e;
+    --red-soft: #fbeeed;
+    --green: #1b663e;
+    --green-soft: #edf7f0;
+    --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+    --sans: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --container-max: 1140px;
+    --reading-max: 740px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 19px/1.7 var(--serif);
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  a { color: var(--petrol); text-underline-offset: 3px; }
+  a:hover { color: var(--red); }
+  :focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+  .skip {
+    position: absolute;
+    left: -9999px;
+  }
+  .skip:focus {
+    left: 16px;
+    top: 8px;
+    z-index: 2000;
+    background: var(--petrol);
+    color: var(--paper);
+    padding: 10px 16px;
+    border-radius: 4px;
+    font: 600 14px var(--sans);
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  /* Reading Progress Bar */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: var(--red);
+    z-index: 1000;
+    transition: width 0.08s linear;
+  }
+  @supports (animation-timeline: scroll()) {
+    .reading-progress {
+      width: 100%;
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      animation: grow-progress auto linear;
+      animation-timeline: scroll();
+    }
+    @keyframes grow-progress {
+      to { transform: scaleX(1); }
+    }
+  }
+
+  /* Hero Header */
+  .hero {
+    background: var(--petrol);
+    color: var(--paper);
+    padding: 36px 0 24px;
+    border-bottom: 1px solid #1a3c44;
+  }
+  .hero-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  .hero h1 {
+    font: 500 clamp(32px, 4.2vw, 52px)/1.14 var(--serif);
+    letter-spacing: -0.015em;
+    max-width: 980px;
+    color: #ffffff;
+  }
+  .standfirst {
+    font: 400 clamp(17px, 1.75vw, 21px)/1.55 var(--sans);
+    color: #c7d7d3;
+    margin-top: 18px;
+    max-width: 900px;
+    text-wrap: pretty;
+  }
+  .byline {
+    font: 400 14px var(--sans);
+    color: #9fb8b4;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .byline-dot { color: #496d74; }
+
+  /* Hero Media Wrapper (Direct Unsplash Developer Workstation Photo, No Captions) */
+  .hero-media-wrapper {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 20px 32px 0;
+  }
+  .hero-image-card {
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--paper-card);
+    border: 1px solid var(--rule);
+    box-shadow: 0 8px 24px rgba(15, 46, 54, 0.08);
+  }
+  .hero-image-card img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Two-column layout */
+  .layout {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 28px 32px 48px;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: clamp(32px, 4.5vw, 60px);
+    align-items: start;
+  }
+
+  /* Left Rail Table of Contents */
+  .contents {
+    position: sticky;
+    top: 32px;
+    font: 500 14px/1.45 var(--sans);
+    border-top: 2px solid var(--ink);
+    padding-top: 18px;
+  }
+  .contents-title {
+    font: 700 11px/1 var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .contents ol { list-style: none; }
+  .contents li { position: relative; margin-bottom: 14px; }
+  .contents a { color: var(--muted); text-decoration: none; transition: color 0.15s ease; display: block; }
+  .contents a:hover { color: var(--ink); }
+  .contents li.active a { color: var(--petrol); font-weight: 700; }
+  .contents li.active::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 6px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  /* Article reading column */
+  article {
+    min-width: 0;
+    max-width: var(--reading-max);
+  }
+
+  /* Article prose styling */
+  .lead {
+    font-size: 21px;
+    line-height: 1.6;
+    color: #1a2927;
+    margin-bottom: 24px;
+  }
+  .lead::first-letter {
+    font-family: var(--serif);
+    font-size: 3.2em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 12px;
+    padding-top: 4px;
+    color: var(--petrol);
+    font-weight: 500;
+  }
+  @supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+    .lead::first-letter {
+      initial-letter: 2;
+      -webkit-initial-letter: 2;
+      float: none;
+      font-size: inherit;
+      line-height: inherit;
+      padding-top: 0;
+      margin-right: 12px;
+    }
+  }
+
+  article p {
+    margin-bottom: 22px;
+    color: var(--ink);
+  }
+
+  article h2 {
+    font: 500 32px/1.2 var(--serif);
+    letter-spacing: -0.01em;
+    margin: 32px 0 12px;
+    scroll-margin-top: 32px;
+    color: var(--petrol);
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+  }
+
+  article h3 {
+    font: 600 20px/1.35 var(--sans);
+    margin: 24px 0 10px;
+    color: var(--petrol);
+  }
+
+  article ol, article ul {
+    padding-left: 24px;
+    margin-bottom: 20px;
+  }
+  article li {
+    margin-bottom: 8px;
+  }
+
+  /* Streamlined SVG Visualization Cards (No Captions) */
+  .visual-card {
+    margin: 24px 0 24px;
+    background: #ffffff;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 20px 22px;
+    box-shadow: 0 4px 16px rgba(15, 46, 54, 0.04);
+  }
+  .visual-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .visual-title {
+    font: 600 15.5px/1.3 var(--sans);
+    color: var(--petrol);
+  }
+  .visual-tag {
+    font: 600 11px/1 var(--sans);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 8px;
+    border-radius: 3px;
+    background: #eef2f1;
+    color: var(--petrol);
+  }
+
+  .editorial-diagram {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+
+  /* Safeguards Matrix Table */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(15, 46, 54, 0.04);
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 15px/1.55 var(--sans);
+    margin: 0;
+  }
+  caption.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+  th {
+    text-align: left;
+    font-weight: 700;
+    padding: 16px 20px;
+    background: #f8faf8;
+    border-bottom: 2px solid var(--petrol);
+    color: var(--petrol);
+    font-size: 13.5px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink);
+  }
+  tr:last-child td { border-bottom: 0; }
+  td:first-child {
+    font-weight: 700;
+    color: var(--petrol);
+    white-space: nowrap;
+    width: 24%;
+  }
+  td:nth-child(2) {
+    color: var(--muted);
+    width: 38%;
+  }
+  td:nth-child(3) {
+    color: var(--ink);
+    font-weight: 500;
+    width: 38%;
+  }
+
+  /* Tasteful Service Assessment CTA (No Forced Explanation) */
+  .service-cta {
+    background: #f0f5f4;
+    border: 1.5px solid #b2d2cd;
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 28px 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 16px rgba(15, 46, 54, 0.04);
+  }
+  .service-cta-title {
+    font: 600 18px/1.3 var(--sans);
+    color: var(--petrol);
+    margin-bottom: 6px;
+  }
+  .service-cta-text {
+    font: 400 14.5px/1.55 var(--sans);
+    color: #2b3d3a;
+    margin: 0;
+  }
+  .service-cta-link {
+    background: var(--petrol);
+    color: #ffffff !important;
+    padding: 12px 22px;
+    border-radius: 5px;
+    font: 600 13.5px/1 var(--sans);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+  .service-cta-link:hover {
+    background: var(--petrol-dark);
+  }
+
+  /* Site Footer */
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding: 32px 0;
+    font: 13.5px/1.5 var(--sans);
+    color: var(--muted);
+    background: #ebe8e1;
+  }
+  .footer-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 10px 18px; list-style: none; }
+  .footer-links a { color: var(--muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--ink); }
+
+  /* Responsive Rules */
+  @media (max-width: 960px) {
+    .hero { padding: 28px 0 20px; }
+    .hero-inner { padding: 0 20px; }
+    .hero-media-wrapper { padding: 16px 20px 0; }
+    .layout { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 24px 20px 36px; }
+    .contents { display: none; }
+    .service-cta { flex-direction: column; align-items: flex-start; gap: 14px; padding: 20px 18px; }
+  }
+  @media (max-width: 680px) {
+    body { font-size: 18px; }
+    .lead { font-size: 19.5px; }
+    article h2 { font-size: 26px; margin-top: 26px; }
+    
+    /* Responsive Table Card Layout */
+    .table-responsive { border: 0; box-shadow: none; background: transparent; }
+    thead { display: none; }
+    tr {
+      display: block;
+      background: #ffffff;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      margin-bottom: 16px;
+      padding: 16px;
+    }
+    td { display: block; border: 0; padding: 6px 0; width: 100% !important; }
+    td:first-child {
+      font-size: 16px;
+      color: var(--petrol);
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
+      white-space: normal;
+    }
+    td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 11.5px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reading-progress { display: none; }
+  }
+
+  @media print {
+    /* Force a 1280px wide, continuous single-page desktop canvas */
+    @page { size: 1280px 3950px; margin: 0; }
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .reading-progress { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="progress" aria-hidden="true"></div>
+
+<a class="skip" href="#main">Skip to main content</a>
+
+<!-- Hero Header (Clean open, no top bar) -->
+<header class="hero" id="hero">
+  <div class="hero-inner">
+    <h1>The Enterprise AI Attack Surface: Three Real Vulnerabilities in Workplace Deployments</h1>
+    <p class="standfirst">Teams are connecting AI assistants to email inboxes, chat channels, and software repositories to work faster. Here is how confidential records leak, how software packages get poisoned, and the engineering controls needed to protect company systems.</p>
+    <div class="byline">
+      <span>By the Spectrum Zestwings Security Engineering Team</span>
+      <span class="byline-dot">&middot;</span>
+      <span>Published October 2026</span>
+      <span class="byline-dot">&middot;</span>
+      <span>6 min read</span>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Media (Direct Unsplash Developer Workstation Photo, No Captions) -->
+<div class="hero-media-wrapper">
+  <div class="hero-image-card" id="fig-hero-media">
+    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1400&amp;q=80&amp;auto=format&amp;fit=crop" alt="Modern developer workstation screen displaying chat bot user interface source code" width="1200" height="600" fetchpriority="high">
+  </div>
+</div>
+
+<!-- Main Content Grid -->
+<div class="layout" id="main">
+  <!-- Sticky Table of Contents -->
+  <nav class="contents" aria-label="Article Sections">
+    <div class="contents-title">In this article</div>
+    <ol>
+      <li class="active"><a href="#assistants">Assistant data leaks</a></li>
+      <li><a href="#supply-chain">Poisoned software packages</a></li>
+      <li><a href="#autonomous-agents">Autonomous agent execution</a></li>
+      <li><a href="#executive-safeguards">Three core safeguards</a></li>
+      <li><a href="#audit">Security assessment</a></li>
+    </ol>
+  </nav>
+
+  <article>
+    <!-- Lead Section -->
+    <p class="lead">Companies are connecting artificial intelligence directly to internal email inboxes, chat channels, and software repositories. While these tools speed up routine work, standard corporate security models fail to protect them.</p>
+
+    <p>Traditional security checks who logs in and assumes traffic inside the corporate network is trustworthy. That model breaks down when an AI assistant reads untrusted external messages and sensitive internal files at the same time.</p>
+
+    <p>Because language models process instructions and data together in a single stream, they cannot distinguish between an authorized employee command and a malicious prompt hidden inside incoming text. When deployed without guardrails, this creates three distinct security exposures.</p>
+
+    <!-- Section 1: Assistant Data Leaks -->
+    <h2 id="assistants">1. Workplace assistant data leaks</h2>
+
+    <p>Direct prompt injection involves an external user typing adversarial prompts into a public chatbot. In enterprise environments, indirect prompt injection is a far more serious operational risk.</p>
+
+    <p>An attacker places hidden instructions inside ordinary inbound text, such as a vendor invoice, support ticket, or shared document. When an employee asks their AI assistant to summarize their inbox or search internal files, the assistant reads the document, mistakes the hidden text for an authentic command, and follows it.</p>
+
+    <p>Researchers demonstrated this against Microsoft 365 Copilot in exploit CVE-2025-32711 (EchoLeak). An email containing invisible text directed Copilot to search internal SharePoint files for credentials and attach them to an outbound web request. Private records left the company network without the employee clicking any links or opening attachments.</p>
+
+    <p>Standard firewalls allow the traffic through because the request originates from an authenticated enterprise application.</p>
+
+    <!-- Visual 1: Streamlined 3-Step Sequence Diagram (No Captions) -->
+    <div class="visual-card" id="fig-assistant-leak">
+      <div class="visual-header">
+        <span class="visual-title">Data Leak Sequence: How Hidden Text Bypasses Firewalls</span>
+        <span class="visual-tag">System Dataflow</span>
+      </div>
+      <svg viewBox="0 0 760 210" class="editorial-diagram" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Simple three-step diagram showing an untrusted email tricking an AI assistant into transmitting private company data">
+        <defs>
+          <marker id="arrow-petrol" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f2e36"/>
+          </marker>
+        </defs>
+
+        <!-- Step 1 -->
+        <g transform="translate(16, 20)">
+          <rect width="216" height="160" rx="8" fill="#fcfbfa" stroke="#d5d9d3" stroke-width="1.2"/>
+          <rect width="216" height="34" rx="8" fill="#f2f5f4"/>
+          <text x="16" y="22" fill="#0f2e36" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="12" letter-spacing="0.05em">STEP 1: UNTRUSTED INPUT</text>
+          
+          <text x="16" y="66" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="13.5">Vendor Email or Ticket</text>
+          <text x="16" y="90" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">Contains hidden instructions</text>
+          <text x="16" y="108" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">formatted in invisible font.</text>
+          <text x="16" y="136" fill="#0f2e36" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="11.5">No employee clicks any link.</text>
+        </g>
+
+        <!-- Arrow 1 to 2 -->
+        <path d="M 232 100 L 268 100" stroke="#0f2e36" stroke-width="1.8" fill="none" marker-end="url(#arrow-petrol)"/>
+
+        <!-- Step 2 -->
+        <g transform="translate(272, 20)">
+          <rect width="216" height="160" rx="8" fill="#fcfbfa" stroke="#d5d9d3" stroke-width="1.2"/>
+          <rect width="216" height="34" rx="8" fill="#0f2e36"/>
+          <text x="16" y="22" fill="#ffffff" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="12" letter-spacing="0.05em">STEP 2: ASSISTANT PROCESSES</text>
+
+          <text x="16" y="66" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="13.5">Assistant Reads Messages</text>
+          <text x="16" y="90" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">Scans email and internal</text>
+          <text x="16" y="108" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">company files together.</text>
+          <text x="16" y="136" fill="#b3261e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="11.5">Obeys the hidden instruction.</text>
+        </g>
+
+        <!-- Arrow 2 to 3 -->
+        <path d="M 488 100 L 524 100" stroke="#0f2e36" stroke-width="1.8" fill="none" marker-end="url(#arrow-petrol)"/>
+
+        <!-- Step 3 -->
+        <g transform="translate(528, 20)">
+          <rect width="216" height="160" rx="8" fill="#fffaf9" stroke="#fecaca" stroke-width="1.2"/>
+          <rect width="216" height="34" rx="8" fill="#fee2e2"/>
+          <text x="16" y="22" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="12" letter-spacing="0.05em">STEP 3: DATA EXPOSURE</text>
+
+          <text x="16" y="66" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="13.5">Private Data Transmitted</text>
+          <text x="16" y="90" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">Sends files to outside server</text>
+          <text x="16" y="108" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">via normal HTTPS requests.</text>
+          <text x="16" y="136" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="11.5">Network firewall sees normal traffic.</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Section 2: Poisoned Software in Pipelines -->
+    <h2 id="supply-chain">2. Poisoned software in engineering pipelines</h2>
+
+    <p>Software teams rely heavily on AI coding assistants like GitHub Copilot and Cursor. These models predict code by matching patterns from public repositories, which frequently leads them to invent package names that sound real but do not exist in official registries. This behavior is known as package hallucination.</p>
+
+    <p>In a benchmark presented at the USENIX Security Symposium evaluating 576,000 code samples, open-source models recommended non-existent software packages in 21.7% of outputs, while commercial frontier models did so in 5.2% of cases.</p>
+
+    <!-- Visual 2: Clear Side-by-Side Resolution Comparison (No Captions) -->
+    <div class="visual-card" id="fig-slopsquatting-flow">
+      <div class="visual-header">
+        <span class="visual-title">Software Supply Chain: Real Package vs. Fake Package Trap</span>
+        <span class="visual-tag">Package Resolution</span>
+      </div>
+      <svg viewBox="0 0 760 180" class="editorial-diagram" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparison showing safe package installation versus an attacker setting up malware under a fake package name suggested by AI">
+        <defs>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#166534"/>
+          </marker>
+          <marker id="arrow-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#991b1b"/>
+          </marker>
+        </defs>
+
+        <!-- Safe Row -->
+        <g transform="translate(16, 14)">
+          <rect width="728" height="68" rx="8" fill="#f4fbf6" stroke="#bbf7d0" stroke-width="1.2"/>
+          
+          <rect x="16" y="18" width="104" height="32" rx="4" fill="#e8f5ed"/>
+          <text x="68" y="38" fill="#166534" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="11.5" letter-spacing="0.04em" text-anchor="middle">NORMAL PATH</text>
+          
+          <rect x="132" y="14" width="170" height="40" rx="6" fill="#ffffff" stroke="#86efac"/>
+          <text x="217" y="38" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" font-weight="500" text-anchor="middle">Real package suggested</text>
+
+          <path d="M 306 34 L 336 34" stroke="#166534" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+
+          <rect x="342" y="14" width="224" height="40" rx="6" fill="#ffffff" stroke="#86efac"/>
+          <text x="454" y="38" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" font-weight="500" text-anchor="middle">Verified on public registry</text>
+
+          <path d="M 572 34 L 602 34" stroke="#166534" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+
+          <rect x="608" y="14" width="108" height="40" rx="6" fill="#166534"/>
+          <text x="662" y="38" fill="#ffffff" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="12" text-anchor="middle">Safe Build</text>
+        </g>
+
+        <!-- Attack Row -->
+        <g transform="translate(16, 94)">
+          <rect width="728" height="68" rx="8" fill="#fff8f8" stroke="#fecaca" stroke-width="1.2"/>
+          
+          <rect x="16" y="18" width="104" height="32" rx="4" fill="#fee2e2"/>
+          <text x="68" y="38" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="11.5" letter-spacing="0.04em" text-anchor="middle">ATTACK PATH</text>
+
+          <rect x="132" y="14" width="170" height="40" rx="6" fill="#ffffff" stroke="#fca5a5"/>
+          <text x="217" y="38" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" font-weight="500" text-anchor="middle">AI invents fake name</text>
+
+          <path d="M 306 34 L 336 34" stroke="#991b1b" stroke-width="1.8" fill="none" marker-end="url(#arrow-red)"/>
+
+          <rect x="342" y="14" width="224" height="40" rx="6" fill="#ffffff" stroke="#fca5a5"/>
+          <text x="454" y="38" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" font-weight="500" text-anchor="middle">Attacker sends malicious code</text>
+
+          <path d="M 572 34 L 602 34" stroke="#991b1b" stroke-width="1.8" fill="none" marker-end="url(#arrow-red)"/>
+
+          <rect x="608" y="14" width="108" height="40" rx="6" fill="#991b1b"/>
+          <text x="662" y="38" fill="#ffffff" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="12" text-anchor="middle">Malware Runs</text>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Visual 3: Uncluttered Benchmark Chart (No Captions) -->
+    <div class="visual-card" id="fig-hallucination-chart">
+      <div class="visual-header">
+        <span class="visual-title">Fake Package Rates: Open-Source vs. Commercial AI Models</span>
+        <span class="visual-tag">USENIX Security 2025</span>
+      </div>
+      <svg viewBox="0 0 760 170" class="editorial-diagram" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Horizontal bar chart comparing fake package recommendation rates: open-source models 21.7 percent, commercial frontier models 5.2 percent">
+        <!-- Scale ticks -->
+        <line x1="220" y1="20" x2="220" y2="120" stroke="#d5d9d3" stroke-width="1"/>
+        <line x1="324" y1="20" x2="324" y2="120" stroke="#eae7df" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="428" y1="20" x2="428" y2="120" stroke="#eae7df" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="532" y1="20" x2="532" y2="120" stroke="#eae7df" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="636" y1="20" x2="636" y2="120" stroke="#eae7df" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <text x="220" y="136" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" text-anchor="middle">0%</text>
+        <text x="324" y="136" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" text-anchor="middle">5%</text>
+        <text x="428" y="136" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" text-anchor="middle">10%</text>
+        <text x="532" y="136" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" text-anchor="middle">15%</text>
+        <text x="636" y="136" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12" text-anchor="middle">20%</text>
+
+        <!-- Bar 1 -->
+        <text x="204" y="52" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="13.5" text-anchor="end">Open-source models</text>
+        <rect x="220" y="34" width="451" height="28" rx="4" fill="#0f2e36"/>
+        <text x="682" y="53" fill="#0f2e36" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="14">21.7%</text>
+
+        <!-- Bar 2 -->
+        <text x="204" y="102" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="13.5" text-anchor="end">Commercial models</text>
+        <rect x="220" y="84" width="108" height="28" rx="4" fill="#28545e"/>
+        <text x="338" y="103" fill="#28545e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="14">5.2%</text>
+
+        <text x="220" y="158" fill="#56605e" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="11">Data from 576,000 code samples tested across 16 models (USENIX Security Symposium 2025).</text>
+      </svg>
+    </div>
+
+    <p>Attackers track the fabricated names that appear repeatedly and register them on public registries with malicious code inside them. When a developer accepts an AI suggestion and runs an install command, the build pipeline automatically downloads the attacker's package directly into the build environment.</p>
+
+    <p>Security researchers demonstrated this attack by registering a single hallucinated package name, react-codeshift, on npm. Within days, automated build systems across hundreds of real enterprise repositories attempted to install it.</p>
+
+    <!-- Section 3: Autonomous Agent Execution -->
+    <h2 id="autonomous-agents">3. Autonomous agent execution authority</h2>
+
+    <p>While early AI deployments only produced text, modern agents run operating system commands, modify customer accounts, and interact directly with cloud infrastructure.</p>
+
+    <p>Granting execution authority to language models creates immediate operational exposure. If an agent connects directly to a shell or database, any prompt that tricks the model turns into an unauthorized action on internal infrastructure.</p>
+
+    <p>HP Wolf Security reported that cybercriminals already use generative models to produce shifting script loaders for remote access tools. By continually rephrasing code structure and variable names, models produce unique file hashes that bypass signature-based antivirus scanners.</p>
+
+    <!-- Visual 4: Intuitive Human-in-the-Loop Safeguard Diagram (No Captions) -->
+    <div class="visual-card" id="fig-agent-flow">
+      <div class="visual-header">
+        <span class="visual-title">Agent Execution: Unchecked Action vs. Human Approval Checkpoint</span>
+        <span class="visual-tag">Control Architecture</span>
+      </div>
+      <svg viewBox="0 0 760 200" class="editorial-diagram" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram showing unchecked AI execution leading to compromised systems compared with a human review checkpoint blocking unauthorized actions">
+        <defs>
+          <marker id="arrow-petrol2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#0f2e36"/>
+          </marker>
+        </defs>
+
+        <!-- Unchecked Flow -->
+        <g transform="translate(16, 16)">
+          <rect width="728" height="74" rx="8" fill="#fff8f8" stroke="#fecaca" stroke-width="1.2"/>
+          <text x="20" y="42" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="12">UNCHECKED</text>
+          
+          <rect x="130" y="16" width="160" height="42" rx="5" fill="#ffffff" stroke="#fca5a5"/>
+          <text x="142" y="41" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">Hidden prompt in ticket</text>
+
+          <path d="M 290 37 L 330 37" stroke="#991b1b" stroke-width="1.8" fill="none" marker-end="url(#arrow-red)"/>
+
+          <rect x="338" y="16" width="168" height="42" rx="5" fill="#ffffff" stroke="#fca5a5"/>
+          <text x="350" y="41" fill="#991b1b" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">Bot executes shell action</text>
+
+          <path d="M 506 37 L 546 37" stroke="#991b1b" stroke-width="1.8" fill="none" marker-end="url(#arrow-red)"/>
+
+          <rect x="554" y="16" width="156" height="42" rx="5" fill="#991b1b"/>
+          <text x="568" y="41" fill="#ffffff" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="12">System Compromised</text>
+        </g>
+
+        <!-- Guardrailed Flow -->
+        <g transform="translate(16, 108)">
+          <rect width="728" height="74" rx="8" fill="#f4fbf6" stroke="#bbf7d0" stroke-width="1.2"/>
+          <text x="20" y="42" fill="#166534" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="700" font-size="12">SAFEGUARDED</text>
+
+          <rect x="130" y="16" width="160" height="42" rx="5" fill="#ffffff" stroke="#86efac"/>
+          <text x="142" y="41" fill="#16201f" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="12">Hidden prompt in ticket</text>
+
+          <path d="M 290 37 L 330 37" stroke="#166534" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+
+          <rect x="338" y="16" width="168" height="42" rx="5" fill="#166534"/>
+          <text x="350" y="41" fill="#ffffff" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="12">Human Approval Check</text>
+
+          <path d="M 506 37 L 546 37" stroke="#166534" stroke-width="1.8" fill="none" marker-end="url(#arrow-green)"/>
+
+          <rect x="554" y="16" width="156" height="42" rx="5" fill="#ffffff" stroke="#86efac"/>
+          <text x="572" y="41" fill="#166534" font-family="'Hanken Grotesk', system-ui, sans-serif" font-weight="600" font-size="12">Action Blocked</text>
+        </g>
+      </svg>
+    </div>
+
+    <p>When agents run without human confirmation gates, attackers do not need to compromise an employee computer. They direct the automated agent that already possesses internal credentials.</p>
+
+    <!-- Section 4: Three Core Safeguards -->
+    <h2 id="executive-safeguards">4. Practical engineering safeguards</h2>
+
+    <p>Securing workplace AI deployments does not require stopping adoption. It requires establishing basic architectural boundaries:</p>
+
+    <ol>
+      <li>Separate external data from internal access. An assistant processing external emails or customer tickets must not have access to confidential databases or private code repositories in the same execution context.</li>
+      <li>Quarantine new software dependencies. Route all package installations through a private repository proxy. Hold any public package registered within the past thirty days in quarantine until verified.</li>
+      <li>Require human confirmation for sensitive actions. Automated agents should propose actions rather than executing them independently. Modifying customer databases, running shell scripts, or sending data outside the organization must require explicit employee approval.</li>
+    </ol>
+
+    <!-- Core Safeguards Matrix Table (No Captions) -->
+    <div class="visual-card" id="fig-defense-table">
+      <div class="visual-header">
+        <span class="visual-title">Enterprise AI Safeguards: Implementation Matrix</span>
+        <span class="visual-tag">Technical Controls</span>
+      </div>
+      <div class="table-responsive" tabindex="0" role="region" aria-label="Core Safeguards Matrix Table">
+        <table class="table">
+          <caption class="sr-only">Enterprise AI Threat Vectors, Standard Corporate Mistakes, and Engineering Safeguards</caption>
+          <thead>
+            <tr>
+              <th scope="col">Risk Area</th>
+              <th scope="col">The Common Mistake</th>
+              <th scope="col">The Technical Safeguard</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Workplace Assistant Leaks</td>
+              <td data-label="The Common Mistake">Trusting user logins to keep confidential files safe.</td>
+              <td data-label="The Technical Safeguard">Keep external messages separate from internal files. Block assistants from outputting unapproved external web links.</td>
+            </tr>
+            <tr>
+              <td>Poisoned Software Packages</td>
+              <td data-label="The Common Mistake">Allowing build systems to download public packages automatically.</td>
+              <td data-label="The Technical Safeguard">Route package downloads through an internal repository. Hold public packages under thirty days old for review.</td>
+            </tr>
+            <tr>
+              <td>Autonomous Agent Misuse</td>
+              <td data-label="The Common Mistake">Giving AI bots permission to run commands without human review.</td>
+              <td data-label="The Technical Safeguard">Require employee confirmation before running commands, editing databases, or transferring records.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tasteful, Unforced Service Assessment CTA -->
+    <section class="service-cta" id="audit">
+      <div>
+        <div class="service-cta-title">Assessing your enterprise AI security posture?</div>
+        <p class="service-cta-text">Spectrum Zestwings provides technical security reviews for teams connecting language models to corporate data, internal workflows, and production systems.</p>
+      </div>
+      <div>
+        <a href="https://spectrumzestwings.ae/security-audit" class="service-cta-link">Request an Assessment</a>
+      </div>
+    </section>
+  </article>
+</div>
+
+<!-- Site Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div>&copy; 2026 Spectrum Zestwings Engineering Blog. Open technical research and system security.</div>
+    <ul class="footer-links">
+      <li><a href="#assistants">Assistant Leaks</a></li>
+      <li><a href="#supply-chain">Poisoned Packages</a></li>
+      <li><a href="#autonomous-agents">Agent Execution</a></li>
+      <li><a href="#executive-safeguards">Safeguards</a></li>
+      <li><a href="#audit">Assessment</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // Reading progress and active navigation highlight
+  document.addEventListener('DOMContentLoaded', function () {
+    const headings = document.querySelectorAll('article h2[id], section[id]');
+    const navLinks = document.querySelectorAll('.contents a');
+    const progressBar = document.getElementById('progress');
+
+    // Scroll progress fallback when animation-timeline is unsupported
+    if (!CSS.supports('animation-timeline', 'scroll()') && progressBar) {
+      window.addEventListener('scroll', function () {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const current = window.scrollY;
+        progressBar.style.width = Math.min(100, Math.max(0, (current / total) * 100)) + '%';
+      }, { passive: true });
+    }
+
+    // IntersectionObserver for active TOC section indicator
+    if ('IntersectionObserver' in window && headings.length > 0) {
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            navLinks.forEach(function (link) {
+              const li = link.parentElement;
+              if (link.getAttribute('href') === '#' + entry.target.id) {
+                li.classList.add('active');
+              } else {
+                li.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '0px 0px -65% 0px', threshold: 0 });
+
+      headings.forEach(function (h) { observer.observe(h); });
+    }
+  });
+</script>
+
+</body>
+</html>
